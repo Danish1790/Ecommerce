@@ -144,7 +144,7 @@ function Nav() {
 
                         </Box>
 
-                        <div style={{ fontWeight: "bolder", marginRight: '30px' }}>Items:{cartItem}</div>
+                        <div style={{ fontWeight: "bolder", marginRight: '30px' }}>Items:{cartItem.length}</div>
 
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">

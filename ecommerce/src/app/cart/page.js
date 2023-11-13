@@ -1,7 +1,9 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import { cardActionAreaClasses } from '@mui/material'
+import React,{useState} from 'react'
+import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { add } from "../redux/CartSlice"
+import { add,remove } from "../../redux/CartSlice"
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -9,78 +11,43 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 
 
 const BootstrapTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black,
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black,
-  },
-}));
-
-
-const HomePage = () => {
-
-  const [products, setProducts] = useState([]);
-  const [likeBtnClr,setLikeBtnClr] = useState("#d8af8a")
-  const [tabState,setTabState] = useState(true)
-
-  const dispatch = useDispatch()
-
-  const getProducts = async () => {
-    const res = await fetch("https://fakestoreapi.com/products")
-    const data = await res.json()
-    setProducts(data);
-  }
-
-  const handleAdd = (product) => {
-    dispatch(add(product))
-  }
-
-  const handleClickHomeTab = () =>{
-    setTabState(true)
-  }
-  const handleClickLikeTab = () =>{
-    setTabState(false)
-  }
-
-  const handleClickLikeBtn = () => {
-    setLikeBtnClr("red")
-  }
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
   
 
-  useEffect(() => {
-    getProducts();
-  }, [])
+const page = () => {
 
+    const [likeBtnClr,setLikeBtnClr] = useState("#d8af8a")
 
+    const dispatch = useDispatch()
+    const productsInCart = useSelector((state)=>state.cart)
+    console.log("cartItem",productsInCart)
 
+    const handleRemove = (product) => {
+        remove(product)
+    }
   return (
-
     <div>
+        liked
 
-      <Box sx={{ width: '100%', typography: 'body1',display:'flex',justifyContent:'space-around',flexDirection:"row",margin:'20px 0' }}>
-        <HomeIcon  sx={{ cursor: "pointer", color:tabState?"Orange":"#d8af8a", fontSize: '40px', margin: 'auto' }} 
-          onClick={handleClickHomeTab}
-        />
-        <FavoriteIcon  sx={{ cursor: "pointer",color:tabState?"#d8af8a":"Orange", fontSize: '40px', margin: 'auto' }} 
-          onClick={handleClickLikeTab}
-        />
-      </Box>
 
-      <Grid container spacing={2}>
+        <Grid container spacing={2}>
         {
-          products.map((product) => (
+            productsInCart.map((product) => (
             <Grid item xs={8} sm={6} md={4} lg={4} xl={3} key={product.id}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
@@ -108,10 +75,10 @@ const HomePage = () => {
                   <Button
                     size="small"
                     sx={{ backgroundColor: "#693500", color: 'white',alignSelf:'center' }}
-                    onClick={() => { handleAdd(product) }}
-                  >Add to cart</Button>
+                    onClick={() => { handleRemove(product) }}
+                  >Remove</Button>
                   </div>
-                  <FavoriteIcon  sx={{color:likeBtnClr,cursor:'pointer'}}/>
+                  <FavoriteIcon sx={{color:likeBtnClr}}/>
                 </CardActions>
               </Card>
             </Grid>
@@ -122,4 +89,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default page
