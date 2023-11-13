@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { add } from "../redux/CartSlice"
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -10,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -34,11 +37,16 @@ const BootstrapTooltip = styled(({ className, ...props }) => (
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
+  const dispatch = useDispatch()
 
   const getProducts = async () => {
     const res = await fetch("https://fakestoreapi.com/products")
     const data = await res.json()
     setProducts(data);
+  }
+
+  const handleAdd = (product) => {
+    dispatch(add(product))
   }
 
   useEffect(() => {
@@ -74,7 +82,11 @@ const HomePage = () => {
                 </CardContent>
                 <CardActions>
                   <Button size="small" sx={{ backgroundColor: "#da7517", color: "white" }}>{product.price}</Button>
-                  <Button size="small" sx={{ backgroundColor: "#693500", color: 'white' }}>Add to cart</Button>
+                  <Button
+                    size="small"
+                    sx={{ backgroundColor: "#693500", color: 'white' }}
+                    onClick={() => { handleAdd(product) }}
+                  >Add to cart</Button>
                 </CardActions>
               </Card>
             </Grid>
