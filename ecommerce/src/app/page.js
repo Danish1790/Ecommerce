@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { add } from "../redux/CartSlice"
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -31,6 +31,7 @@ const BootstrapTooltip = styled(({ className, ...props }) => (
 
 const HomePage = () => {
 
+  const productInState = useSelector((state)=>state.cart)
   const [products, setProducts] = useState([]);
   const [likeBtnClr,setLikeBtnClr] = useState("#d8af8a")
   const [tabState,setTabState] = useState(true)
@@ -44,6 +45,7 @@ const HomePage = () => {
   }
 
   const handleAdd = (product) => {
+    console.log("products in state after add product",productInState)
     dispatch(add(product))
   }
 
